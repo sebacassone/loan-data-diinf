@@ -6,7 +6,7 @@ spring:
       server:
         git:
           default-label: main
-          uri: https://github.com/sebacassone/prestabanco-microservicios
+          uri: https://github.com/sebacassone/loan-data-diinf
           username: sebacassone
           password: ${GITHUB_TOKEN}
           search-paths: config-data

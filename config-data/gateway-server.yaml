@@ -21,11 +21,19 @@ spring:
               - OPTIONS
             allowedHeaders: "*"
       routes:
-        - id: debts-server
-          uri: http://localhost:8081
+        - id: income-data-server
+          uri: http://income-server:3001
           predicates:
-            - Path=/api/v1/debts/**
-        - id: debts-user-server
-          uri: http://localhost:8082
+            - Path=/api/v1/data-proyectors/**
+        - id: income-users-server
+          uri: http://income-server:3001
+          predicates:
+            - Path=/api/v1/users/**
+        - id: management-loan-server
+          uri: http://income-server:3002
+          predicates:
+            - Path=/api/v1/loans/**
+        - id: reports-server
+          uri: http://management-server:3003
           predicates:
             - Path=/api/v1/debts/user/**

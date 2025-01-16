@@ -30,10 +30,10 @@ spring:
           predicates:
             - Path=/api/v1/users/**
         - id: management-loan-server
-          uri: http://income-server:3002
+          uri: http://management-server:3002
           predicates:
             - Path=/api/v1/loans/**
         - id: reports-server
-          uri: http://management-server:3003
+          uri: http://report-server:3003
           predicates:
             - Path=/api/v1/debts/user/**

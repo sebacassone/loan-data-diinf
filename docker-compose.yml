@@ -52,7 +52,7 @@ services:
       PGADMIN_DEFAULT_PASSWORD: ${PDADMIN_PASSWORD}
       PGADMIN_LISTEN_PORT: 8080
     ports:
-      - "8080:8080"
+      - "8081:8080"
     volumes:
       - ./data-pgadmin:/pgadmin4/servers.json
     networks:
@@ -61,7 +61,7 @@ services:
     image: sebacassone/income-server:latest
     restart: always
     environment:
-      DB_HOST: localhost:5433
+      DB_HOST: income-db:5432
       DB_NAME: ${DB_NAME_INCOME}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
@@ -73,7 +73,7 @@ services:
     image: sebacassone/management-server:latest
     restart: always
     environment:
-      DB_HOST: localhost:5434
+      DB_HOST: management-db:5432
       DB_NAME: ${DB_NAME_MANAGEMENT}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
@@ -85,12 +85,28 @@ services:
     image: sebacassone/report-server:latest
     restart: always
     environment:
-      DB_HOST: localhost:5435
+      DB_HOST: report-db:5432
       DB_NAME: ${DB_NAME_REPORT}
       DB_USERNAME: ${DB_USERNAME}
       DB_PASSWORD: ${DB_PASSWORD}
     ports:
       - "3003:3003"
+    networks:
+      - mynet
+  config-server:
+    image: sebacassone/config-server:latest
+    restart: always
+    environment:
+      GITHUB_TOKEN: ${GITHUB_TOKEN}
+    ports:
+      - "8888:8888"
+    networks:
+      - mynet
+  gateway-server:
+    image: sebacassone/gateway-server:latest
+    restart: always
+    ports:
+      - "8080:8080"
     networks:
       - mynet
 

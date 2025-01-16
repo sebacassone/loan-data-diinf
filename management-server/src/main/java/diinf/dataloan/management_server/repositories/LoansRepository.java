@@ -9,4 +9,5 @@ import java.util.List;
 @Repository
 public interface LoansRepository extends JpaRepository<LoansEntity, Integer> {
     List<LoansEntity> findByIdProyectorOrderByDateLoanAscHourLoanAsc(Integer idProyector);
+    List<LoansEntity> findByIdUserOrderByDateLoanAscHourLoanAsc(Integer idUser);
 }

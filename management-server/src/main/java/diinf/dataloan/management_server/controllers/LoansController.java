@@ -81,4 +81,14 @@ public class LoansController {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+    @GetMapping("/find-by-id-user/{id}")
+    public ResponseEntity<List<LoansEntity>> getLoansByUser(@PathVariable Integer id) {
+        try {
+            List<LoansEntity> loans = loansService.findLoansByUser(id);
+            return ResponseEntity.ok(loans);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

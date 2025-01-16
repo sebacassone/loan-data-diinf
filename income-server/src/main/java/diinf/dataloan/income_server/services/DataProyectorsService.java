@@ -43,4 +43,9 @@ public class DataProyectorsService {
         }
         return null;
     }
+
+    public List<DataProyectorsEntity> findDataAvailables() {
+        // Se obtienen los datas que estén disponibles
+        return dataProyectorsRepository.findByAvailableProyector(true);
+    }
 }

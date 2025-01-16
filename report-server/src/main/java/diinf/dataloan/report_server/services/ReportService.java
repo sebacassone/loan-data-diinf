@@ -24,7 +24,7 @@ public class ReportService {
     }
 
     public List<LoanReportModel> getLoanReport(Integer projectorId) {
-        String loansUrl = "http://gateway-server:8080/api/v1/loans/projector/" + projectorId;
+        String loansUrl = "http://management-server:3002/api/v1/loans/projector/" + projectorId;
 
         // Usa ParameterizedTypeReference para mapear correctamente la lista
         ResponseEntity<List<LoanModel>> response = restTemplate.exchange(
@@ -46,7 +46,7 @@ public class ReportService {
             if (loan == null) {
                 continue;
             }
-            String paymentUrl = "http://gateway-server:8080/api/v1/loans/get-repayments-by-loanid/" + loan.getIdLoan();
+            String paymentUrl = "http://management-server:3002/api/v1/loans/get-repayments-by-loanid/" + loan.getIdLoan();
             RepaymentModel repayment = restTemplate.getForObject(paymentUrl, RepaymentModel.class);
             System.out.println("Repayment: " + repayment);
             if (repayment == null) {

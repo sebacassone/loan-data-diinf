@@ -65,4 +65,12 @@ public class DataProyectorsController {
         }
     }
 
+    @GetMapping("/available")
+    public ResponseEntity<List<DataProyectorsEntity>> findDataAvailables() {
+        try{
+            return ResponseEntity.ok(dataProyectorsService.findDataAvailables());
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

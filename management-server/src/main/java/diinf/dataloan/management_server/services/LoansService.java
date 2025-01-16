@@ -28,7 +28,7 @@ public class LoansService {
     }
 
     public LoansEntity save(LoansEntity loan) {
-        String proyectorUrl = "http://gateway-server:8080/api/v1/data-proyectors/find-by-id/" + loan.getIdProyector();
+        String proyectorUrl = "http://income-server:3001/api/v1/data-proyectors/find-by-id/" + loan.getIdProyector();
         ProyectorModel proyector = restTemplate.getForObject(proyectorUrl, ProyectorModel.class);
         System.out.println(proyector);
 
@@ -47,7 +47,7 @@ public class LoansService {
             }
 
             // Verificar si el usuario está habilitado
-            String userUrl = "http://gateway-server:8080/api/v1/users/find-by-id/" + loan.getIdUser();
+            String userUrl = "http://income-server:3001/api/v1/users/find-by-id/" + loan.getIdUser();
             UsersModel user = restTemplate.getForObject(userUrl, UsersModel.class);
             if (user != null) {
                 if (!user.isStateUser()) {
@@ -90,7 +90,7 @@ public class LoansService {
         }
 
         // Se obtiene el proyector
-        String proyectorUrl = "http://gateway-server:8080/api/v1/data-proyectors/find-by-id/" + loan.getIdProyector();
+        String proyectorUrl = "http://income-server:3001/api/v1/data-proyectors/find-by-id/" + loan.getIdProyector();
         ProyectorModel proyector = restTemplate.getForObject(proyectorUrl, ProyectorModel.class);
         if (proyector == null) {
             throw new IllegalArgumentException("Proyector no encontrado");
@@ -102,14 +102,14 @@ public class LoansService {
 
         // Regla: si > 6 horas => inhabilitar temporalmente por una semana
         if (hours > 6) {
-            String disableUrl = "http://gateway-server:8080/api/v1/users/disable-temporarily/" + loan.getIdUser();
+            String disableUrl = "http://income-server:3001/api/v1/users/disable-temporarily/" + loan.getIdUser();
             restTemplate.postForEntity(disableUrl, null, UsersModel.class);
         }
 
         // Regla: si el estado es "Con Daños", manejar daños
         if ("Con Daños".equalsIgnoreCase(repayment.getStateRepayment())) {
             proyector.setStateProyector("Dañado");
-            String handleDamageUrl = "http://gateway-server:8080/api/v1/users/handle-damage/" + loan.getIdUser();
+            String handleDamageUrl = "http://income-server:3001/api/v1/users/handle-damage/" + loan.getIdUser();
             restTemplate.postForEntity(handleDamageUrl, null, UsersModel.class);
         }
 
@@ -119,7 +119,7 @@ public class LoansService {
         loansRepository.save(loan);
 
         // Actualizar el estado del proyector
-        String proyectorUpdateUrl = "http://gateway-server:8080/api/v1/data-proyectors/update-data";
+        String proyectorUpdateUrl = "http://income-server:3001/api/v1/data-proyectors/update-data";
         restTemplate.put(proyectorUpdateUrl, proyector, ProyectorModel.class);
 
         repaymentsRepository.save(repayment);
@@ -128,6 +128,10 @@ public class LoansService {
 
     public LoansEntity findById(Integer id) {
         return loansRepository.findById(id).orElse(null);
+    }
+
+    public List<LoansEntity> findLoansByUser(Integer idUser) {
+        return loansRepository.findByIdUserOrderByDateLoanAscHourLoanAsc(idUser);
     }
 
     public void deleteById(Integer id) {

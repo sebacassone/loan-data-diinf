@@ -82,6 +82,7 @@ const ProfesorView: React.FC = () => {
       if (userId) {
         fetchLoans(userId);
         fetchProjectorsAll();
+        fetchProjectors();
       } else {
         setError('ID de usuario no encontrado.');
       }
@@ -154,6 +155,7 @@ const ProfesorView: React.FC = () => {
 
       if (userId) {
         fetchLoans(userId);
+        fetchProjectors();
       }
       setOpen(false);
       // limpia los campos del nuevo préstamo
@@ -190,6 +192,7 @@ const ProfesorView: React.FC = () => {
         const userId = user.id || user.idUser;
         if (userId) {
           fetchLoans(userId);
+          fetchProjectors();
         }
       }
       setReturnDialogOpen(false);
@@ -343,7 +346,13 @@ const ProfesorView: React.FC = () => {
               margin="dense"
               label="Fecha"
               type="date"
-              onChange={handleNewLoanChange}
+              onChange={(e) =>
+                handleNewLoanChange(
+                  e as React.ChangeEvent<
+                    HTMLInputElement | { name?: string; value: unknown }
+                  >,
+                )
+              }
               name="date"
               fullWidth
               value={newLoan.date}
@@ -371,7 +380,7 @@ const ProfesorView: React.FC = () => {
                 onChange={handleSelectChange}
                 label="Proyector"
               >
-                {projectorsAll.map((projector: Projector) => (
+                {projectrsAvailable.map((projector: Projector) => (
                   <MenuItem
                     key={projector.idProyector}
                     value={projector.idProyector}
@@ -388,7 +397,13 @@ const ProfesorView: React.FC = () => {
                 id="uso-select"
                 name="use"
                 value={newLoan.use}
-                onChange={handleNewLoanChange}
+                onChange={(e) =>
+                  handleNewLoanChange(
+                    e as React.ChangeEvent<
+                      HTMLInputElement | { name?: string; value: unknown }
+                    >,
+                  )
+                }
                 label="Uso"
               >
                 <MenuItem value="Dictado de clases">Dictado de clases</MenuItem>

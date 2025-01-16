@@ -75,6 +75,23 @@ const getLoansByUserId = async (userId: string) => {
   }
 };
 
+const createProjector = async (
+  brand: string,
+  model: string,
+  state: string,
+  isDisabled: boolean,
+) => {
+  console.log('Creating projector:', brand, model, state, isDisabled);
+  const response = await HttpClient.post('/api/v1/data-proyectors/save', {
+    brandProyector: brand,
+    modelProyector: model,
+    stateProyector: state,
+    availableProyector: isDisabled,
+  });
+  console.log('Response:', response);
+  return response.data;
+};
+
 export default {
   getActiveLoans,
   getAvailableProjectors,
@@ -83,4 +100,5 @@ export default {
   getProjectors,
   getLoansByProjector,
   getLoansByUserId,
+  createProjector,
 };

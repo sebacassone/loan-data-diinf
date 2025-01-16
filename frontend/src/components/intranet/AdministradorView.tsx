@@ -9,87 +9,112 @@ import {
   TableHead,
   TableRow,
   Paper,
-  FormControl,
-  InputLabel,
-  Select,
-  MenuItem,
+  Button,
 } from '@mui/material';
-import loanService from '../../services/loan.service';
+import NavBar from '../Navbar';
+import reportService from '../../services/report.service';
+import AddIcon from '@mui/icons-material/Add';
+
+// Definición de la interfaz basada en LoanReportModel
+interface LoanReportModel {
+  fechaPrestamo: string;
+  horaPrestamo: string;
+  profesor: number;
+  fechaDevolucion: string;
+  horaDevolucion: string;
+  estadoDevolucion: boolean;
+  usoProyector: string;
+  numeroHoras: number;
+}
 
 const AdministradorView: React.FC = () => {
-  const [projectors, setProjectors] = useState([]);
-  const [selectedProjector, setSelectedProjector] = useState('');
-  const [loans, setLoans] = useState([]);
+  const [reports, setReports] = useState<LoanReportModel[]>([]);
 
   useEffect(() => {
-    fetchProjectors();
+    fetchReports();
   }, []);
 
-  useEffect(() => {
-    if (selectedProjector) {
-      fetchLoans(selectedProjector);
+  const fetchReports = async () => {
+    try {
+      const data = await reportService.getReport();
+      setReports(data);
+    } catch (error) {
+      console.error('Error al obtener el reporte:', error);
     }
-  }, [selectedProjector]);
-
-  const fetchProjectors = async () => {
-    const data = await loanService.getProjectors();
-    setProjectors(data);
-  };
-
-  const fetchLoans = async (projectorId: string) => {
-    const data = await loanService.getLoansByProjector(projectorId);
-    setLoans(data);
   };
 
   return (
-    <Box sx={{ padding: 4 }}>
-      <Typography variant="h4" sx={{ mb: 4 }}>
-        Reporte de Préstamos
-      </Typography>
-      <FormControl fullWidth sx={{ mb: 4 }}>
-        <InputLabel>Proyector</InputLabel>
-        <Select
-          value={selectedProjector}
-          onChange={(e) => setSelectedProjector(e.target.value)}
+    <>
+      <NavBar />
+      <Box
+        sx={{
+          display: 'flex',
+          justifyContent: 'center',
+          alignItems: 'center',
+          flexDirection: 'column',
+          padding: 4,
+          minHeight: '80vh',
+          backgroundColor: '#F8FAFC',
+        }}
+      >
+        <Typography variant="h4" sx={{ mb: 4, color: '#9AA6B2' }}>
+          Administración de Préstamos
+        </Typography>
+        <TableContainer
+          component={Paper}
+          sx={{ backgroundColor: '#BCCCDC', width: '100%', maxWidth: 1000 }}
         >
-          {projectors.map((projector) => (
-            <MenuItem key={projector.id} value={projector.id}>
-              {projector.brand} {projector.model}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Fecha Préstamo</TableCell>
-              <TableCell>Hora Préstamo</TableCell>
-              <TableCell>Profesor</TableCell>
-              <TableCell>Fecha Devolución</TableCell>
-              <TableCell>Hora Devolución</TableCell>
-              <TableCell>Horas en Préstamo</TableCell>
-              <TableCell>Estado Devolución</TableCell>
-              <TableCell>Uso</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {loans.map((loan) => (
-              <TableRow key={loan.id}>
-                <TableCell>{loan.dateLoan}</TableCell>
-                <TableCell>{loan.hourLoan}</TableCell>
-                <TableCell>{loan.professor}</TableCell>
-                <TableCell>{loan.dateReturn}</TableCell>
-                <TableCell>{loan.hourReturn}</TableCell>
-                <TableCell>{loan.totalHours}</TableCell>
-                <TableCell>{loan.stateReturn}</TableCell>
-                <TableCell>{loan.use}</TableCell>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell sx={{ color: '#9AA6B2' }}>Fecha Préstamo</TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>Hora Préstamo</TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>Profesor ID</TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>
+                  Fecha Devolución
+                </TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>Hora Devolución</TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>
+                  Estado Devolución
+                </TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>Uso Proyector</TableCell>
+                <TableCell sx={{ color: '#9AA6B2' }}>Número de Horas</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
-    </Box>
+            </TableHead>
+            <TableBody>
+              {reports.map((report, index) => (
+                <TableRow key={index}>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.fechaPrestamo}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.horaPrestamo}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.profesor}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.fechaDevolucion}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.horaDevolucion}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.estadoDevolucion ? 'Devuelto' : 'Pendiente'}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.usoProyector}
+                  </TableCell>
+                  <TableCell sx={{ color: '#9AA6B2' }}>
+                    {report.numeroHoras}
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      </Box>
+    </>
   );
 };
 

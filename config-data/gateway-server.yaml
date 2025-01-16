@@ -36,4 +36,4 @@ spring:
         - id: reports-server
           uri: http://report-server:3003
           predicates:
-            - Path=/api/v1/debts/user/**
+            - Path=/api/v1/reports/**
